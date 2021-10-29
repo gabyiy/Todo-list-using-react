@@ -1,24 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
+	let [tasks, setTasks] = useState([""]);
+	let [inputValue, setInputValue] = useState("");
+
+	const addTask = e => {
+		if (e.keyCode === 13 && inputValue !== "") {
+			const newTask = [tasks.length + 1, inputValue];
+			setTasks([...tasks, newTask]);
+			setInputValue("");
+		}
+	};
+
+	const deleteTask = k => {
+		const newTasks = tasks.filter(task => task[0] !== k);
+		setTasks(newTasks);
+	};
+
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="container">
+			<input
+				className="col align-self-center"
+				type="text"
+				onChange={e => setInputValue(e.target.value)}
+				value={inputValue}
+				onKeyDown={addTask}
+				placeholder={inputValue === "" ? "Add a new task..." : ""}
+			/>
+
+			<ul className="p-2">
+				{tasks.map(task => (
+					<>
+						<li
+							className="card bg-primary text-center"
+							onClick={() => deleteTask(task[0])}
+							key={task[0]}>
+							{task[1]}
+						</li>
+						<hr />
+					</>
+				))}
+			</ul>
+
+			{tasks.length > 0 ? (
+				<b>{tasks.length} tasks to finish!!</b>
+			) : (
+				<b>No tasks</b>
+			)}
 		</div>
 	);
 };
